@@ -1,0 +1,5 @@
+{
+  "name": "SuperGo - Supermercado Digital Pro",
+  "description": "An advanced digital supermarket application featuring product browsing, a smart cart, a full-featured admin panel, and a personalized user experience. Built with React, TypeScript, and Tailwind CSS.",
+  "requestFramePermissions": []
+}
