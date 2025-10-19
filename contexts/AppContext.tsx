@@ -30,6 +30,7 @@ interface AppState {
     isLoading: boolean;
     lastOrder: Order | null;
     appliedDiscount: Coupon | null;
+    isDarkMode: boolean;
     toast: { message: string, type: 'success' | 'error' | 'warning' | 'info' } | null;
 }
 
@@ -58,6 +59,7 @@ const initialState: AppState = {
     isLoading: true,
     lastOrder: null,
     appliedDiscount: null,
+    isDarkMode: false,
     toast: null
 };
 
@@ -84,6 +86,7 @@ type Action =
     | { type: 'APPLY_COUPON'; payload: Coupon | null }
     | { type: 'SHOW_TOAST'; payload: AppState['toast'] }
     | { type: 'HIDE_TOAST' }
+    | { type: 'TOGGLE_DARK_MODE' }
     | { type: 'ADD_PRODUCT'; payload: Product }
     | { type: 'UPDATE_PRODUCT'; payload: Product }
     | { type: 'DELETE_PRODUCT'; payload: number }
@@ -228,6 +231,8 @@ const appReducer = (state: AppState, action: Action): AppState => {
             return { ...state, toast: action.payload };
         case 'HIDE_TOAST':
             return { ...state, toast: null };
+        case 'TOGGLE_DARK_MODE':
+            return { ...state, isDarkMode: !state.isDarkMode };
         default:
             return state;
     }

@@ -47,12 +47,12 @@ export const ProductManagement = () => {
     return (
         <div>
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold">Gestión de Productos ({state.products.length})</h2>
+                <h2 className="text-xl font-bold dark:text-white">Gestión de Productos ({state.products.length})</h2>
                 <Button variant="primary" onClick={handleAddNew}><Icon name="add"/> Agregar Producto</Button>
             </div>
-            <div className="bg-white shadow-md rounded-lg overflow-x-auto">
-                <table className="w-full text-sm text-left text-gray-500">
-                    <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+            <div className="bg-white dark:bg-[#2C2B30] shadow-md rounded-lg overflow-x-auto">
+                <table className="w-full text-sm text-left">
+                    <thead className="text-xs text-gray-700 dark:text-gray-300 uppercase bg-gray-50 dark:bg-gray-700">
                         <tr>
                             <th scope="col" className="px-6 py-3">Nombre</th>
                             <th scope="col" className="px-6 py-3">Categoría</th>
@@ -63,14 +63,14 @@ export const ProductManagement = () => {
                     </thead>
                     <tbody>
                         {state.products.map(p => (
-                            <tr key={p.id} className="bg-white border-b hover:bg-gray-50">
-                                <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{p.name}</td>
-                                <td className="px-6 py-4">{p.category}</td>
-                                <td className="px-6 py-4">${p.price.toFixed(2)}</td>
-                                <td className="px-6 py-4">{p.stock}</td>
+                            <tr key={p.id} className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <td className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">{p.name}</td>
+                                <td className="px-6 py-4 text-gray-600 dark:text-gray-300">{p.category}</td>
+                                <td className="px-6 py-4 text-gray-600 dark:text-gray-300">${p.price.toFixed(2)}</td>
+                                <td className="px-6 py-4 text-gray-600 dark:text-gray-300">{p.stock}</td>
                                 <td className="px-6 py-4 flex gap-2">
-                                    <button onClick={() => handleEdit(p)} className="text-blue-600 hover:text-blue-800"><Icon name="edit"/></button>
-                                    <button onClick={() => handleDelete(p.id)} className="text-red-600 hover:text-red-800"><Icon name="delete"/></button>
+                                    <button onClick={() => handleEdit(p)} className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"><Icon name="edit"/></button>
+                                    <button onClick={() => handleDelete(p.id)} className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"><Icon name="delete"/></button>
                                 </td>
                             </tr>
                         ))}
@@ -112,13 +112,19 @@ const ProductFormModal: React.FC<{isOpen: boolean, onClose: () => void, product:
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            if (file.size > 2 * 1024 * 1024) { // 2MB limit
+                alert("La imagen es demasiado grande. Por favor, sube una imagen de menos de 2MB.");
+                e.target.value = ''; // Reset file input
+                return;
+            }
             const reader = new FileReader();
             reader.onload = (event) => {
                 if (event.target?.result) {
                     setFormData(prev => ({ ...prev, image: event.target.result as string }));
                 }
             };
-            reader.readAsDataURL(e.target.files[0]);
+            reader.readAsDataURL(file);
         }
     };
 
@@ -130,7 +136,7 @@ const ProductFormModal: React.FC<{isOpen: boolean, onClose: () => void, product:
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
-            <h2 className="text-xl font-bold mb-4">{product ? 'Editar Producto' : 'Agregar Producto'}</h2>
+            <h2 className="text-xl font-bold mb-4 dark:text-white">{product ? 'Editar Producto' : 'Agregar Producto'}</h2>
             <form onSubmit={handleSubmit} className="space-y-4 max-h-[70vh] overflow-y-auto pr-2">
                 <Input label="Nombre del Producto" name="name" value={formData.name || ''} onChange={handleChange} required />
                 <Select label="Categoría" name="category" value={formData.category || ''} onChange={handleChange} required>
@@ -147,10 +153,17 @@ const ProductFormModal: React.FC<{isOpen: boolean, onClose: () => void, product:
                     <Input label="Precio" name="price" type="number" step="0.01" value={formData.price || ''} onChange={handleChange} required />
                     <Input label="Stock" name="stock" type="number" value={formData.stock || ''} onChange={handleChange} required />
                 </div>
-                <Input label="URL de Imagen" name="image" value={formData.image || ''} onChange={handleChange} />
+                <Input 
+                    label="URL de Imagen" 
+                    name="image" 
+                    value={formData.image?.startsWith('data:') ? 'Imagen cargada desde archivo' : formData.image || ''} 
+                    onChange={handleChange}
+                    disabled={formData.image?.startsWith('data:')}
+                    placeholder="Pega una URL de imagen pública"
+                />
                  <div>
-                    <label className="block text-sm font-medium mb-2 text-[#49454F]">O subir imagen</label>
-                    <input type="file" accept="image/*" onChange={handleFileChange} className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#EADDFF] file:text-[#21005D] hover:file:bg-[#d9c8ff]"/>
+                    <label className="block text-sm font-medium mb-2 text-[#1C1B1F] dark:text-[#E6E1E5]">O subir/cambiar imagen</label>
+                    <input type="file" accept="image/*" onChange={handleFileChange} className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#EADDFF] file:text-[#21005D] hover:file:bg-[#d9c8ff] dark:file:bg-[#4A4458] dark:file:text-[#E8DEF8] dark:hover:file:bg-[#635C70]"/>
                 </div>
                 {formData.image && <img src={formData.image} alt="preview" className="w-32 h-32 object-cover rounded-lg mx-auto"/>}
 
@@ -205,12 +218,12 @@ export const UserManagement = () => {
     return (
         <div>
              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold">Gestión de Usuarios ({state.users.length})</h2>
+                <h2 className="text-xl font-bold dark:text-white">Gestión de Usuarios ({state.users.length})</h2>
                 <Button variant="primary" onClick={handleAddNew}><Icon name="add"/> Agregar Usuario</Button>
             </div>
-             <div className="bg-white shadow-md rounded-lg overflow-x-auto">
-                <table className="w-full text-sm text-left text-gray-500">
-                    <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+             <div className="bg-white dark:bg-[#2C2B30] shadow-md rounded-lg overflow-x-auto">
+                <table className="w-full text-sm text-left">
+                    <thead className="text-xs text-gray-700 dark:text-gray-300 uppercase bg-gray-50 dark:bg-gray-700">
                         <tr>
                             <th className="px-6 py-3">Nombre</th>
                             <th className="px-6 py-3">Correo</th>
@@ -220,13 +233,13 @@ export const UserManagement = () => {
                     </thead>
                     <tbody>
                         {state.users.map(u => (
-                            <tr key={u.id} className="bg-white border-b hover:bg-gray-50">
-                                <td className="px-6 py-4 font-medium">{u.name}</td>
-                                <td className="px-6 py-4">{u.email}</td>
-                                <td className="px-6 py-4 capitalize">{u.role}</td>
+                            <tr key={u.id} className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <td className="px-6 py-4 font-medium dark:text-white">{u.name}</td>
+                                <td className="px-6 py-4 text-gray-600 dark:text-gray-300">{u.email}</td>
+                                <td className="px-6 py-4 capitalize text-gray-600 dark:text-gray-300">{u.role}</td>
                                 <td className="px-6 py-4 flex gap-2">
-                                    <button onClick={() => handleEdit(u)} className="text-blue-600 hover:text-blue-800"><Icon name="edit"/></button>
-                                    <button onClick={() => handleDelete(u.id)} className="text-red-600 hover:text-red-800"><Icon name="delete"/></button>
+                                    <button onClick={() => handleEdit(u)} className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"><Icon name="edit"/></button>
+                                    <button onClick={() => handleDelete(u.id)} className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"><Icon name="delete"/></button>
                                 </td>
                             </tr>
                         ))}
@@ -257,7 +270,7 @@ const UserFormModal: React.FC<{isOpen: boolean, onClose: () => void, user: User 
     
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
-            <h2 className="text-xl font-bold mb-4">{user ? 'Editar Usuario' : 'Agregar Usuario'}</h2>
+            <h2 className="text-xl font-bold mb-4 dark:text-white">{user ? 'Editar Usuario' : 'Agregar Usuario'}</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <Input label="Nombre" name="name" value={formData.name || ''} onChange={handleChange} required />
                 <Input label="Correo" name="email" type="email" value={formData.email || ''} onChange={handleChange} required />
@@ -305,12 +318,12 @@ export const StoreManagement = () => {
     return (
         <div>
              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold">Gestión de Tiendas ({state.stores.length})</h2>
+                <h2 className="text-xl font-bold dark:text-white">Gestión de Tiendas ({state.stores.length})</h2>
                 <Button variant="primary" onClick={handleAddNew}><Icon name="add"/> Agregar Tienda</Button>
             </div>
-             <div className="bg-white shadow-md rounded-lg overflow-x-auto">
-                 <table className="w-full text-sm text-left text-gray-500">
-                     <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+             <div className="bg-white dark:bg-[#2C2B30] shadow-md rounded-lg overflow-x-auto">
+                 <table className="w-full text-sm text-left">
+                     <thead className="text-xs text-gray-700 dark:text-gray-300 uppercase bg-gray-50 dark:bg-gray-700">
                         <tr>
                             <th className="px-6 py-3">Nombre</th>
                             <th className="px-6 py-3">Dirección</th>
@@ -320,13 +333,13 @@ export const StoreManagement = () => {
                     </thead>
                     <tbody>
                         {state.stores.map(s => (
-                             <tr key={s.id} className="bg-white border-b hover:bg-gray-50">
-                                <td className="px-6 py-4 font-medium">{s.name}</td>
-                                <td className="px-6 py-4">{s.address}</td>
-                                <td className="px-6 py-4">{s.phone}</td>
+                             <tr key={s.id} className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <td className="px-6 py-4 font-medium dark:text-white">{s.name}</td>
+                                <td className="px-6 py-4 text-gray-600 dark:text-gray-300">{s.address}</td>
+                                <td className="px-6 py-4 text-gray-600 dark:text-gray-300">{s.phone}</td>
                                 <td className="px-6 py-4 flex gap-2">
-                                    <button onClick={() => handleEdit(s)} className="text-blue-600"><Icon name="edit"/></button>
-                                    <button onClick={() => handleDelete(s.id)} className="text-red-600"><Icon name="delete"/></button>
+                                    <button onClick={() => handleEdit(s)} className="text-blue-600 dark:text-blue-400"><Icon name="edit"/></button>
+                                    <button onClick={() => handleDelete(s.id)} className="text-red-600 dark:text-red-400"><Icon name="delete"/></button>
                                 </td>
                             </tr>
                         ))}
@@ -348,7 +361,7 @@ const StoreFormModal: React.FC<{isOpen: boolean, onClose: () => void, store: Sto
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
-            <h2 className="text-xl font-bold mb-4">{store ? 'Editar Tienda' : 'Agregar Tienda'}</h2>
+            <h2 className="text-xl font-bold mb-4 dark:text-white">{store ? 'Editar Tienda' : 'Agregar Tienda'}</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <Input label="Nombre" name="name" value={formData.name || ''} onChange={handleChange} required />
                 <Input label="Dirección" name="address" value={formData.address || ''} onChange={handleChange} required />
@@ -392,12 +405,12 @@ export const CouponManagement = () => {
     return (
         <div>
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold">Gestión de Cupones ({state.coupons.length})</h2>
+                <h2 className="text-xl font-bold dark:text-white">Gestión de Cupones ({state.coupons.length})</h2>
                 <Button variant="primary" onClick={handleAddNew}><Icon name="add"/> Agregar Cupón</Button>
             </div>
-            <div className="bg-white shadow-md rounded-lg overflow-x-auto">
+            <div className="bg-white dark:bg-[#2C2B30] shadow-md rounded-lg overflow-x-auto">
                 <table className="w-full text-sm">
-                     <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                     <thead className="text-xs text-gray-700 dark:text-gray-300 uppercase bg-gray-50 dark:bg-gray-700">
                         <tr>
                             <th className="px-6 py-3">Código</th>
                             <th className="px-6 py-3">Tipo</th>
@@ -408,14 +421,14 @@ export const CouponManagement = () => {
                     </thead>
                     <tbody>
                         {state.coupons.map(c => (
-                            <tr key={c.code} className="border-b hover:bg-gray-50">
-                                <td className="px-6 py-4 font-medium">{c.code}</td>
-                                <td className="px-6 py-4 capitalize">{c.type}</td>
-                                <td className="px-6 py-4">{c.type === 'percentage' ? `${c.value}%` : `$${c.value.toFixed(2)}`}</td>
-                                <td className="px-6 py-4">{new Date(c.endDate).toLocaleDateString()}</td>
+                            <tr key={c.code} className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <td className="px-6 py-4 font-medium dark:text-white">{c.code}</td>
+                                <td className="px-6 py-4 capitalize text-gray-600 dark:text-gray-300">{c.type}</td>
+                                <td className="px-6 py-4 text-gray-600 dark:text-gray-300">{c.type === 'percentage' ? `${c.value}%` : `$${c.value.toFixed(2)}`}</td>
+                                <td className="px-6 py-4 text-gray-600 dark:text-gray-300">{new Date(c.endDate).toLocaleDateString()}</td>
                                 <td className="px-6 py-4 flex gap-2">
-                                    <button onClick={() => handleEdit(c)} className="text-blue-600"><Icon name="edit"/></button>
-                                    <button onClick={() => handleDelete(c.code)} className="text-red-600"><Icon name="delete"/></button>
+                                    <button onClick={() => handleEdit(c)} className="text-blue-600 dark:text-blue-400"><Icon name="edit"/></button>
+                                    <button onClick={() => handleDelete(c.code)} className="text-red-600 dark:text-red-400"><Icon name="delete"/></button>
                                 </td>
                             </tr>
                         ))}
@@ -438,7 +451,7 @@ const CouponFormModal: React.FC<{isOpen: boolean, onClose: () => void, coupon: C
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
-            <h2 className="text-xl font-bold mb-4">{coupon ? 'Editar Cupón' : 'Agregar Cupón'}</h2>
+            <h2 className="text-xl font-bold mb-4 dark:text-white">{coupon ? 'Editar Cupón' : 'Agregar Cupón'}</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <Input label="Código" name="code" value={formData.code || ''} onChange={handleChange} required disabled={!!coupon} />
                 <div className="grid grid-cols-2 gap-4">
@@ -505,14 +518,14 @@ export const CategoryManagement = () => {
     return (
         <div>
             <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold">Gestión de Categorías</h2>
+                <h2 className="text-xl font-bold dark:text-white">Gestión de Categorías</h2>
                 <Button variant="primary" onClick={handleAddCategory}><Icon name="add"/> Nueva Categoría</Button>
             </div>
             <div className="space-y-4">
                 {state.categories.map(cat => (
-                    <div key={cat.id} className="bg-white p-4 rounded-lg shadow-sm">
+                    <div key={cat.id} className="bg-white dark:bg-[#2C2B30] p-4 rounded-lg shadow-sm">
                         <div className="flex justify-between items-center">
-                            <h3 className="font-bold flex items-center gap-2"><Icon name={cat.icon}/> {cat.name}</h3>
+                            <h3 className="font-bold flex items-center gap-2 dark:text-white"><Icon name={cat.icon}/> {cat.name}</h3>
                             <div className="flex gap-2">
                                 <Button onClick={() => handleAddSubcategory(cat.id)}><Icon name="add"/> Subcategoría</Button>
                                 <Button variant="danger" onClick={() => handleDeleteCategory(cat.id)}><Icon name="delete"/></Button>
@@ -520,7 +533,7 @@ export const CategoryManagement = () => {
                         </div>
                         <ul className="pl-6 mt-2 space-y-1">
                             {cat.subcategories.map(sub => (
-                                <li key={sub.id} className="flex justify-between items-center">
+                                <li key={sub.id} className="flex justify-between items-center dark:text-gray-300">
                                     <span>{sub.name}</span>
                                     <button onClick={() => handleDeleteSubcategory(cat.id, sub.id)} className="text-red-500 text-sm"><Icon name="close"/></button>
                                 </li>

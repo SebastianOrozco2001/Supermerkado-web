@@ -48,19 +48,19 @@ const Sidebar: React.FC<{ isSidebarOpen: boolean, setIsSidebarOpen: (isOpen: boo
     }
 
     const NavLink = ({ children, onClick, isActive }: { children: React.ReactNode, onClick: (e:React.MouseEvent) => void, isActive?: boolean }) => (
-        <a href="#" onClick={onClick} className={`flex items-center gap-4 px-4 py-3 my-1 rounded-r-full transition-colors duration-200 ${isActive ? 'bg-[#EADDFF] text-[#21005D]' : 'text-[#49454F] hover:bg-gray-200/50'}`}>
+        <a href="#" onClick={onClick} className={`flex items-center gap-4 px-4 py-3 my-1 rounded-r-full transition-colors duration-200 ${isActive ? 'bg-[#EADDFF] text-[#21005D] dark:bg-[#4A4458] dark:text-[#E8DEF8]' : 'text-[#1C1B1F] hover:bg-gray-200/50 dark:text-[#E6E1E5] dark:hover:bg-[#36343B]'}`}>
             {children}
         </a>
     );
 
     return (
         <>
-            <aside className={`fixed top-0 left-0 w-72 h-full bg-[#FFFBFE] shadow-lg z-50 transform transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
+            <aside className={`fixed top-0 left-0 w-72 h-full bg-[#FFFBFE] shadow-lg z-50 transform transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 dark:bg-[#211F26] dark:border-r dark:border-gray-800`}>
                 <div className="p-4 flex items-center justify-between gap-4">
-                    <a href="#" onClick={(e) => handleViewClick(View.PRODUCT, e)} className="flex items-center gap-2 text-2xl font-bold text-[#6750A4]">
+                    <a href="#" onClick={(e) => handleViewClick(View.PRODUCT, e)} className="flex items-center gap-2 text-2xl font-bold text-[#6750A4] dark:text-[#D0BCFF]">
                         <Icon name="store" className="text-3xl" /> SuperGo
                     </a>
-                     <button onClick={() => setIsSidebarOpen(false)} className="lg:hidden p-2">
+                     <button onClick={() => setIsSidebarOpen(false)} className="lg:hidden p-2 dark:text-white">
                         <Icon name="close" />
                     </button>
                 </div>
@@ -89,7 +89,7 @@ const Sidebar: React.FC<{ isSidebarOpen: boolean, setIsSidebarOpen: (isOpen: boo
                                 </NavLink>
                             </li>
                         )}
-                        <hr className="my-4"/>
+                        <hr className="my-4 dark:border-gray-700"/>
                         <li>
                             <NavLink onClick={(e) => handleCategoryClick('all', e)} isActive={state.activeCategory === 'all'}>
                                 <Icon name="category" /> <span>Todos los Productos</span>
@@ -141,9 +141,9 @@ const Header: React.FC<{ onCartClick: () => void, onMenuClick: () => void }> = (
     };
 
     return (
-        <header className="sticky top-0 bg-[#FFFBFE]/80 backdrop-blur-sm z-30 shadow-sm">
+        <header className="sticky top-0 bg-[#FFFBFE]/80 backdrop-blur-sm z-30 shadow-sm dark:bg-[#211F26]/80 dark:border-b dark:border-gray-700">
             <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
-                 <button onClick={onMenuClick} className="lg:hidden p-2 -ml-2">
+                 <button onClick={onMenuClick} className="lg:hidden p-2 -ml-2 text-[#1C1B1F] dark:text-white">
                     <Icon name="menu" />
                 </button>
                 <div className="flex-1 flex justify-center lg:justify-start">
@@ -154,12 +154,15 @@ const Header: React.FC<{ onCartClick: () => void, onMenuClick: () => void }> = (
                             placeholder="Buscar productos..."
                             value={state.searchQuery}
                             onChange={handleSearchChange}
-                            className="w-full bg-[#EADDFF]/50 rounded-full pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#6750A4]"
+                            className="w-full bg-[#EADDFF]/50 rounded-full pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#6750A4] text-[#1C1B1F] dark:text-white dark:bg-[#36343B]"
                         />
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
-                    <button onClick={onCartClick} className="relative p-2">
+                    <button onClick={() => dispatch({ type: 'TOGGLE_DARK_MODE' })} className="p-2 text-[#1C1B1F] dark:text-white">
+                        <Icon name={state.isDarkMode ? 'light_mode' : 'dark_mode'} />
+                    </button>
+                    <button onClick={onCartClick} className="relative p-2 text-[#1C1B1F] dark:text-white">
                         <Icon name="shopping_cart" />
                         {cartItemCount > 0 && (
                             <span className="absolute top-0 right-0 bg-[#B3261E] text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">{cartItemCount}</span>
@@ -229,11 +232,11 @@ const ProductView: React.FC = () => {
             </div>
 
             <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-                <h2 className="text-3xl font-bold text-[#1C1B1F]">{activeCategoryName}</h2>
+                <h2 className="text-3xl font-bold text-[#1C1B1F] dark:text-[#E6E1E5]">{activeCategoryName}</h2>
                 <select 
                     value={state.sortOrder} 
                     onChange={(e) => dispatch({ type: 'SET_SORT_ORDER', payload: e.target.value })}
-                    className="bg-[#FFFBFE] border border-[#79747E] rounded-full px-4 py-2"
+                    className="bg-[#FFFBFE] border border-[#79747E] rounded-full px-4 py-2 dark:bg-[#211F26] dark:text-white dark:border-[#49454F]"
                 >
                     <option value="name-asc">Ordenar por: Nombre (A-Z)</option>
                     <option value="name-desc">Nombre (Z-A)</option>
@@ -246,12 +249,12 @@ const ProductView: React.FC = () => {
             
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                 {state.isLoading ? (
-                    Array.from({ length: 10 }).map((_, i) => <div key={i} className="bg-gray-200 h-96 rounded-2xl animate-pulse"></div>)
+                    Array.from({ length: 10 }).map((_, i) => <div key={i} className="bg-gray-200 dark:bg-gray-700 h-96 rounded-2xl animate-pulse"></div>)
                 ) : filteredProducts.length > 0 ? (
                     filteredProducts.map(p => <ProductCard key={p.id} product={p} />)
                 ) : (
-                    <div className="col-span-full text-center py-12 text-gray-500">
-                        <Icon name="search_off" className="text-6xl text-gray-300 mb-4" />
+                    <div className="col-span-full text-center py-12 text-[#49454F] dark:text-[#CAC4D0]">
+                        <Icon name="search_off" className="text-6xl text-gray-300 dark:text-gray-500 mb-4" />
                         <h3 className="text-xl font-medium">No se encontraron productos</h3>
                         <p>Intenta ajustar tu búsqueda o filtros.</p>
                     </div>
@@ -292,21 +295,21 @@ const ProductDetailView: React.FC = () => {
             </Button>
             <div className="grid md:grid-cols-2 gap-8">
                 <img src={product.image} alt={product.name} className="w-full rounded-2xl shadow-lg"/>
-                <div>
+                <div className="dark:text-[#E6E1E5]">
                     <h1 className="text-4xl font-bold mb-2">{product.name}</h1>
                     <div className="flex items-center gap-2 mb-4">
                         <Icon name="star" className="text-yellow-500" />
                         <span>{product.rating.toFixed(1)}</span>
-                        <span className="text-gray-500">({product.reviewCount} reseñas)</span>
+                        <span className="text-[#49454F] dark:text-[#CAC4D0]">({product.reviewCount} reseñas)</span>
                     </div>
                     <div className="flex items-baseline gap-3 mb-4">
-                        <span className="text-4xl font-bold text-[#6750A4]">${product.price.toFixed(2)}</span>
-                        {product.originalPrice && <span className="text-2xl line-through text-gray-400">${product.originalPrice.toFixed(2)}</span>}
+                        <span className="text-4xl font-bold text-[#6750A4] dark:text-[#D0BCFF]">${product.price.toFixed(2)}</span>
+                        {product.originalPrice && <span className="text-2xl line-through text-gray-500 dark:text-gray-400">${product.originalPrice.toFixed(2)}</span>}
                     </div>
-                    <p className="text-gray-600 mb-6">{product.description}</p>
+                    <p className="text-[#1C1B1F] dark:text-[#E6E1E5] mb-6">{product.description}</p>
                     
                      <div className="flex items-center gap-4 mb-6">
-                        <div className="flex items-center border border-gray-300 rounded-full">
+                        <div className="flex items-center border border-gray-300 dark:border-gray-600 rounded-full">
                             <button onClick={() => setQuantity(q => Math.max(1, q - 1))} className="p-3"><Icon name="remove" /></button>
                             <span className="px-4 text-lg font-medium">{quantity}</span>
                             <button onClick={() => setQuantity(q => Math.min(product.stock, q + 1))} className="p-3"><Icon name="add" /></button>
@@ -314,14 +317,14 @@ const ProductDetailView: React.FC = () => {
                         <Button variant="primary" onClick={handleAddToCart} disabled={product.stock === 0} className="flex-grow">
                             <Icon name="add_shopping_cart" /> Agregar al Carrito
                         </Button>
-                        <button onClick={handleToggleWishlist} className={`p-3 rounded-full border border-gray-300 transition-colors ${isInWishlist ? 'text-[#B3261E] bg-red-50' : 'text-gray-500'}`}>
+                        <button onClick={handleToggleWishlist} className={`p-3 rounded-full border border-gray-300 dark:border-gray-600 transition-colors ${isInWishlist ? 'text-[#B3261E] bg-red-50 dark:bg-red-900/50' : 'text-gray-500 dark:text-gray-300'}`}>
                             <Icon name={isInWishlist ? 'favorite' : 'favorite_border'} />
                         </button>
                     </div>
 
-                    <div className="border-t pt-4">
+                    <div className="border-t dark:border-gray-700 pt-4">
                         <h3 className="font-bold mb-2">Características</h3>
-                        <ul className="list-disc list-inside text-gray-600 space-y-1">
+                        <ul className="list-disc list-inside text-[#1C1B1F] dark:text-[#E6E1E5] space-y-1">
                             {product.features.map((f, i) => <li key={i}>{f}</li>)}
                         </ul>
                     </div>
@@ -337,14 +340,14 @@ const WishlistView: React.FC = () => {
 
     return (
         <div className="p-4 sm:p-6 lg:p-8">
-             <h2 className="text-3xl font-bold text-[#1C1B1F] mb-6">Mi Lista de Deseos</h2>
+             <h2 className="text-3xl font-bold text-[#1C1B1F] dark:text-[#E6E1E5] mb-6">Mi Lista de Deseos</h2>
              {wishlistProducts.length > 0 ? (
                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                     {wishlistProducts.map(p => <ProductCard key={p.id} product={p} />)}
                  </div>
              ) : (
-                <div className="text-center py-12 text-gray-500">
-                    <Icon name="favorite_border" className="text-6xl text-gray-300 mb-4" />
+                <div className="text-center py-12 text-[#49454F] dark:text-[#CAC4D0]">
+                    <Icon name="favorite_border" className="text-6xl text-gray-300 dark:text-gray-500 mb-4" />
                     <h3 className="text-xl font-medium">Tu lista de deseos está vacía</h3>
                     <p>Agrega productos que te gusten para verlos aquí.</p>
                 </div>
@@ -429,17 +432,17 @@ const CheckoutView: React.FC = () => {
 
     return (
         <div className="p-8 max-w-6xl mx-auto">
-            <h1 className="text-3xl font-bold mb-6">Finalizar Compra</h1>
+            <h1 className="text-3xl font-bold mb-6 dark:text-[#E6E1E5]">Finalizar Compra</h1>
             <form onSubmit={handlePlaceOrder} className="grid lg:grid-cols-3 gap-8 items-start">
-                <div className="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm space-y-6">
+                <div className="lg:col-span-2 bg-white dark:bg-[#2C2B30] p-6 rounded-2xl shadow-sm space-y-6">
                     <div>
-                        <h2 className="text-xl font-bold mb-4">1. Método de Entrega</h2>
+                        <h2 className="text-xl font-bold mb-4 dark:text-[#E6E1E5]">1. Método de Entrega</h2>
                         <div className="space-y-2">
                             {['pickup', 'shipping', 'express'].map(method => (
-                                <label key={method} className={`flex items-center gap-4 p-4 border rounded-lg cursor-pointer ${deliveryMethod === method ? 'border-[#6750A4] ring-2 ring-[#EADDFF]' : ''}`}>
+                                <label key={method} className={`flex items-center gap-4 p-4 border rounded-lg cursor-pointer ${deliveryMethod === method ? 'border-[#6750A4] ring-2 ring-[#EADDFF] dark:border-[#D0BCFF]' : 'dark:border-gray-600'}`}>
                                     <input type="radio" name="deliveryMethod" value={method} checked={deliveryMethod === method} onChange={() => setDeliveryMethod(method as any)} className="accent-[#6750A4]"/>
-                                    <span className="font-medium capitalize">{method === 'pickup' ? 'Retirar en tienda' : (method === 'shipping' ? 'Envío a domicilio' : 'Envío Express')}</span>
-                                    <span className="ml-auto font-bold">{method === 'pickup' ? 'Gratis' : (method === 'shipping' ? '$25.00' : '$40.00')}</span>
+                                    <span className="font-medium capitalize dark:text-[#E6E1E5]">{method === 'pickup' ? 'Retirar en tienda' : (method === 'shipping' ? 'Envío a domicilio' : 'Envío Express')}</span>
+                                    <span className="ml-auto font-bold dark:text-[#E6E1E5]">{method === 'pickup' ? 'Gratis' : (method === 'shipping' ? '$25.00' : '$40.00')}</span>
                                 </label>
                             ))}
                         </div>
@@ -447,7 +450,7 @@ const CheckoutView: React.FC = () => {
                     
                     {deliveryMethod === 'pickup' ? (
                         <div>
-                             <h2 className="text-xl font-bold mb-4">2. Selecciona una Tienda</h2>
+                             <h2 className="text-xl font-bold mb-4 dark:text-[#E6E1E5]">2. Selecciona una Tienda</h2>
                              <Select id="storeId" name="storeId" label="Tienda para recoger" required>
                                  <option value="">Selecciona una tienda</option>
                                  {state.stores.map(store => <option key={store.id} value={store.id}>{store.name} - {store.address}</option>)}
@@ -455,7 +458,7 @@ const CheckoutView: React.FC = () => {
                         </div>
                     ) : (
                          <div>
-                             <h2 className="text-xl font-bold mb-4">2. Dirección de Envío</h2>
+                             <h2 className="text-xl font-bold mb-4 dark:text-[#E6E1E5]">2. Dirección de Envío</h2>
                             <Input id="address" name="address" label="Dirección" placeholder="Ingresa tu dirección completa" required/>
                             <div className="grid sm:grid-cols-2 gap-4">
                                 <Input id="city" name="city" label="Ciudad" defaultValue="Guatemala City"/>
@@ -465,7 +468,7 @@ const CheckoutView: React.FC = () => {
                     )}
 
                     <div>
-                         <h2 className="text-xl font-bold mb-4">3. Información de Pago</h2>
+                         <h2 className="text-xl font-bold mb-4 dark:text-[#E6E1E5]">3. Información de Pago</h2>
                          <Input id="cardName" name="cardName" label="Nombre en la tarjeta" placeholder="Como aparece en la tarjeta" required />
                          <Input id="cardNumber" name="cardNumber" label="Número de tarjeta" placeholder="0000 0000 0000 0000" required />
                          <div className="grid sm:grid-cols-2 gap-4">
@@ -475,23 +478,23 @@ const CheckoutView: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="bg-white p-6 rounded-2xl shadow-sm space-y-4">
-                    <h2 className="text-xl font-bold">Resumen de Orden</h2>
+                <div className="bg-white dark:bg-[#2C2B30] p-6 rounded-2xl shadow-sm space-y-4">
+                    <h2 className="text-xl font-bold dark:text-[#E6E1E5]">Resumen de Orden</h2>
                     <div className="space-y-2 text-sm">
-                        <div className="flex justify-between"><span className="text-gray-600">Subtotal</span><span>${subtotal.toFixed(2)}</span></div>
-                        <div className="flex justify-between"><span className="text-gray-600">Envío</span><span>${shippingCost.toFixed(2)}</span></div>
+                        <div className="flex justify-between"><span className="text-[#1C1B1F] dark:text-[#E6E1E5]">Subtotal</span><span className="dark:text-[#E6E1E5]">${subtotal.toFixed(2)}</span></div>
+                        <div className="flex justify-between"><span className="text-[#1C1B1F] dark:text-[#E6E1E5]">Envío</span><span className="dark:text-[#E6E1E5]">${shippingCost.toFixed(2)}</span></div>
                          {discountAmount > 0 && (
-                            <div className="flex justify-between text-green-600"><span className="text-green-600">Descuento ({state.appliedDiscount?.code})</span><span>-${discountAmount.toFixed(2)}</span></div>
+                            <div className="flex justify-between text-green-600 dark:text-green-400"><span>Descuento ({state.appliedDiscount?.code})</span><span>-${discountAmount.toFixed(2)}</span></div>
                         )}
                     </div>
-                    <div className="flex justify-between font-bold text-lg border-t pt-4">
-                        <span>Total</span>
-                        <span>${total.toFixed(2)}</span>
+                    <div className="flex justify-between font-bold text-lg border-t pt-4 dark:border-gray-700">
+                        <span className="dark:text-[#E6E1E5]">Total</span>
+                        <span className="dark:text-[#E6E1E5]">${total.toFixed(2)}</span>
                     </div>
-                     <div className="pt-4 border-t">
-                        <label htmlFor="coupon" className="text-sm font-medium">Código de descuento</label>
+                     <div className="pt-4 border-t dark:border-gray-700">
+                        <label htmlFor="coupon" className="text-sm font-medium dark:text-[#E6E1E5]">Código de descuento</label>
                         <div className="flex gap-2 mt-1">
-                            <input id="coupon" type="text" value={couponCode} onChange={(e) => setCouponCode(e.target.value)} placeholder="Ingresa código" className="w-full px-3 py-2 text-sm rounded-lg border border-[#79747E]"/>
+                            <input id="coupon" type="text" value={couponCode} onChange={(e) => setCouponCode(e.target.value)} placeholder="Ingresa código" className="w-full px-3 py-2 text-sm rounded-lg border border-[#79747E] dark:bg-[#211F26] dark:text-white dark:border-[#49454F]"/>
                             <Button type="button" onClick={handleApplyCoupon}>Aplicar</Button>
                         </div>
                     </div>
@@ -511,14 +514,14 @@ const OrderConfirmationView: React.FC = () => {
     }
     return (
         <div className="p-8 max-w-2xl mx-auto text-center">
-            <div className="bg-white p-8 rounded-2xl shadow-sm">
+            <div className="bg-white dark:bg-[#2C2B30] p-8 rounded-2xl shadow-sm">
                 <Icon name="check_circle" className="text-6xl text-green-500 mb-4"/>
-                <h1 className="text-3xl font-bold mb-2">¡Gracias por tu compra!</h1>
-                <p className="text-gray-600 mb-6">Tu pedido ha sido procesado exitosamente.</p>
-                <div className="text-left bg-gray-50 p-4 rounded-lg border">
-                    <p className="mb-2"><strong>Pedido #:</strong> {order.id}</p>
-                    <p className="mb-2"><strong>Fecha:</strong> {new Date(order.date).toLocaleDateString()}</p>
-                    <p><strong>Total:</strong> <span className="font-bold">${order.total.toFixed(2)}</span></p>
+                <h1 className="text-3xl font-bold mb-2 dark:text-[#E6E1E5]">¡Gracias por tu compra!</h1>
+                <p className="text-[#1C1B1F] dark:text-[#E6E1E5] mb-6">Tu pedido ha sido procesado exitosamente.</p>
+                <div className="text-left bg-gray-50 dark:bg-gray-700 p-4 rounded-lg border dark:border-gray-600">
+                    <p className="mb-2 dark:text-[#E6E1E5]"><strong>Pedido #:</strong> {order.id}</p>
+                    <p className="mb-2 dark:text-[#E6E1E5]"><strong>Fecha:</strong> {new Date(order.date).toLocaleDateString()}</p>
+                    <p className="dark:text-[#E6E1E5]"><strong>Total:</strong> <span className="font-bold">${order.total.toFixed(2)}</span></p>
                 </div>
                  <div className="flex gap-4 justify-center mt-8">
                      <Button variant="primary" onClick={() => dispatch({type:'SET_VIEW', payload:View.PRODUCT})}>Seguir comprando</Button>
@@ -538,43 +541,43 @@ const AccountView: React.FC = () => {
 
     return (
         <div className="p-8 max-w-6xl mx-auto space-y-8">
-            <h1 className="text-3xl font-bold">Mi Cuenta</h1>
+            <h1 className="text-3xl font-bold dark:text-[#E6E1E5]">Mi Cuenta</h1>
             <div className="grid lg:grid-cols-2 gap-8">
-                <div className="bg-white p-6 rounded-2xl shadow-sm">
-                    <h2 className="text-xl font-bold mb-4">Información Personal</h2>
-                    <p><strong>Nombre:</strong> {user.name}</p>
-                    <p><strong>Correo:</strong> {user.email}</p>
-                    <p><strong>Teléfono:</strong> {user.phone || 'No especificado'}</p>
-                    <p><strong>Dirección:</strong> {user.address || 'No especificada'}</p>
+                <div className="bg-white dark:bg-[#2C2B30] p-6 rounded-2xl shadow-sm">
+                    <h2 className="text-xl font-bold mb-4 dark:text-[#E6E1E5]">Información Personal</h2>
+                    <p className="dark:text-[#E6E1E5]"><strong>Nombre:</strong> {user.name}</p>
+                    <p className="dark:text-[#E6E1E5]"><strong>Correo:</strong> {user.email}</p>
+                    <p className="dark:text-[#E6E1E5]"><strong>Teléfono:</strong> {user.phone || 'No especificado'}</p>
+                    <p className="dark:text-[#E6E1E5]"><strong>Dirección:</strong> {user.address || 'No especificada'}</p>
                 </div>
-                 <div className="bg-white p-6 rounded-2xl shadow-sm">
-                    <h2 className="text-xl font-bold mb-4">Programa de Fidelidad</h2>
+                 <div className="bg-white dark:bg-[#2C2B30] p-6 rounded-2xl shadow-sm">
+                    <h2 className="text-xl font-bold mb-4 dark:text-[#E6E1E5]">Programa de Fidelidad</h2>
                      <div className="text-center">
                         <Icon name="star" className="text-5xl text-yellow-500"/>
-                        <p className="text-2xl font-bold">{user.loyaltyPoints} puntos</p>
+                        <p className="text-2xl font-bold dark:text-[#E6E1E5]">{user.loyaltyPoints} puntos</p>
                      </div>
                 </div>
             </div>
             <div>
-                <h2 className="text-xl font-bold mb-4">Historial de Pedidos</h2>
-                <div className="bg-white rounded-2xl shadow-sm">
+                <h2 className="text-xl font-bold mb-4 dark:text-[#E6E1E5]">Historial de Pedidos</h2>
+                <div className="bg-white dark:bg-[#2C2B30] rounded-2xl shadow-sm">
                     {userOrders.length > 0 ? (
-                        <ul className="divide-y">
+                        <ul className="divide-y dark:divide-gray-700">
                             {userOrders.map(order => (
                                 <li key={order.id} className="p-4 flex justify-between items-center">
                                     <div>
-                                        <p className="font-bold">Pedido #{order.id}</p>
-                                        <p className="text-sm text-gray-500">{new Date(order.date).toLocaleDateString()}</p>
+                                        <p className="font-bold dark:text-[#E6E1E5]">Pedido #{order.id}</p>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400">{new Date(order.date).toLocaleDateString()}</p>
                                     </div>
                                     <div className="text-right">
-                                        <p className="font-bold">${order.total.toFixed(2)}</p>
-                                        <p className="text-sm text-green-600">{order.status}</p>
+                                        <p className="font-bold dark:text-[#E6E1E5]">${order.total.toFixed(2)}</p>
+                                        <p className="text-sm text-green-600 dark:text-green-400">{order.status}</p>
                                     </div>
                                 </li>
                             ))}
                         </ul>
                     ): (
-                        <p className="p-8 text-center text-gray-500">No tienes pedidos recientes.</p>
+                        <p className="p-8 text-center text-[#49454F] dark:text-[#CAC4D0]">No tienes pedidos recientes.</p>
                     )}
                 </div>
             </div>
@@ -619,25 +622,25 @@ const AdminView: React.FC = () => {
 
     return (
         <div className="p-4 sm:p-6 lg:p-8">
-            <h1 className="text-3xl font-bold mb-6">Panel de Administración</h1>
+            <h1 className="text-3xl font-bold mb-6 dark:text-[#E6E1E5]">Panel de Administración</h1>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
                 {stats.map(stat => (
-                    <div key={stat.label} className="bg-white p-4 rounded-lg shadow flex items-center gap-4">
-                        <div className="p-3 bg-[#EADDFF] rounded-full"><Icon name={stat.icon} className="text-[#21005D]"/></div>
+                    <div key={stat.label} className="bg-white dark:bg-[#2C2B30] p-4 rounded-lg shadow flex items-center gap-4">
+                        <div className="p-3 bg-[#EADDFF] dark:bg-[#4A4458] rounded-full"><Icon name={stat.icon} className="text-[#21005D] dark:text-[#E8DEF8]"/></div>
                         <div>
-                            <p className="text-sm text-gray-500">{stat.label}</p>
-                            <p className="text-2xl font-bold">{stat.value}</p>
+                            <p className="text-sm text-[#49454F] dark:text-[#CAC4D0]">{stat.label}</p>
+                            <p className="text-2xl font-bold dark:text-[#E6E1E5]">{stat.value}</p>
                         </div>
                     </div>
                 ))}
             </div>
 
-            <div className="border-b border-gray-200">
+            <div className="border-b border-gray-200 dark:border-gray-700">
                 <nav className="-mb-px flex gap-6" aria-label="Tabs">
                     {tabs.map(tab => (
                         <button key={tab} onClick={() => setActiveTab(tab)}
-                            className={`shrink-0 border-b-2 px-1 pb-4 text-sm font-medium capitalize ${activeTab === tab ? 'border-[#6750A4] text-[#6750A4]' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'}`}>
+                            className={`shrink-0 border-b-2 px-1 pb-4 text-sm font-medium capitalize ${activeTab === tab ? 'border-[#6750A4] text-[#6750A4] dark:border-[#D0BCFF] dark:text-[#D0BCFF]' : 'border-transparent text-gray-700 hover:border-gray-300 hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-100 dark:hover:border-gray-500'}`}>
                             {tab}
                         </button>
                     ))}
@@ -678,14 +681,14 @@ const CartSidebar: React.FC<{ isOpen: boolean, onClose: () => void }> = ({ isOpe
 
     return (
         <>
-            <aside className={`fixed top-0 right-0 w-full max-w-sm h-full bg-[#FFFBFE] shadow-lg z-50 transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-                <div className="p-4 flex items-center justify-between border-b">
-                    <h2 className="text-xl font-bold">Mi Carrito</h2>
-                    <button onClick={onClose}><Icon name="close"/></button>
+            <aside className={`fixed top-0 right-0 w-full max-w-sm h-full bg-[#FFFBFE] dark:bg-[#211F26] shadow-lg z-50 transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+                <div className="p-4 flex items-center justify-between border-b dark:border-gray-700">
+                    <h2 className="text-xl font-bold dark:text-[#E6E1E5]">Mi Carrito</h2>
+                    <button onClick={onClose} className="dark:text-white"><Icon name="close"/></button>
                 </div>
                 <div className="h-[calc(100%-16rem)] overflow-y-auto p-4">
                     {state.cart.length === 0 ? (
-                        <p className="text-center text-gray-500 mt-8">Tu carrito está vacío.</p>
+                        <p className="text-center text-[#49454F] dark:text-[#CAC4D0] mt-8">Tu carrito está vacío.</p>
                     ) : (
                         <ul className="space-y-4">
                             {state.cart.map(item => {
@@ -695,16 +698,16 @@ const CartSidebar: React.FC<{ isOpen: boolean, onClose: () => void }> = ({ isOpe
                                     <li key={item.id} className="flex gap-4">
                                         <img src={product.image} alt={product.name} className="w-20 h-20 object-cover rounded-lg"/>
                                         <div className="flex-1">
-                                            <p className="font-medium">{product.name}</p>
-                                            <p className="text-sm text-gray-500">${product.price.toFixed(2)}</p>
-                                            <div className="flex items-center border rounded-full w-fit mt-2">
-                                                <button onClick={() => handleQuantityChange(item.id, item.quantity - 1)} className="px-2 py-1"><Icon name="remove" className="text-sm"/></button>
-                                                <span className="px-2 text-sm">{item.quantity}</span>
-                                                <button onClick={() => handleQuantityChange(item.id, item.quantity + 1)} className="px-2 py-1"><Icon name="add" className="text-sm"/></button>
+                                            <p className="font-medium dark:text-[#E6E1E5]">{product.name}</p>
+                                            <p className="text-sm text-[#49454F] dark:text-[#CAC4D0]">${product.price.toFixed(2)}</p>
+                                            <div className="flex items-center border dark:border-gray-600 rounded-full w-fit mt-2">
+                                                <button onClick={() => handleQuantityChange(item.id, item.quantity - 1)} className="px-2 py-1 dark:text-white"><Icon name="remove" className="text-sm"/></button>
+                                                <span className="px-2 text-sm dark:text-white">{item.quantity}</span>
+                                                <button onClick={() => handleQuantityChange(item.id, item.quantity + 1)} className="px-2 py-1 dark:text-white"><Icon name="add" className="text-sm"/></button>
                                             </div>
                                         </div>
                                         <div className="text-right">
-                                            <p className="font-bold">${(product.price * item.quantity).toFixed(2)}</p>
+                                            <p className="font-bold dark:text-[#E6E1E5]">${(product.price * item.quantity).toFixed(2)}</p>
                                         </div>
                                     </li>
                                 )
@@ -712,12 +715,12 @@ const CartSidebar: React.FC<{ isOpen: boolean, onClose: () => void }> = ({ isOpe
                         </ul>
                     )}
                 </div>
-                <div className="absolute bottom-0 left-0 right-0 p-4 border-t bg-white">
-                    <div className="flex justify-between font-medium">
+                <div className="absolute bottom-0 left-0 right-0 p-4 border-t dark:border-gray-700 bg-white dark:bg-[#211F26]">
+                    <div className="flex justify-between font-medium dark:text-white">
                         <span>Subtotal</span>
                         <span>${subtotal.toFixed(2)}</span>
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">Envío y descuentos calculados en el checkout.</p>
+                    <p className="text-xs text-[#49454F] dark:text-[#CAC4D0] mt-1">Envío y descuentos calculados en el checkout.</p>
                     <Button variant="primary" className="w-full mt-4" disabled={state.cart.length === 0} onClick={handleCheckout}>Proceder al Pago</Button>
                 </div>
             </aside>
@@ -770,7 +773,7 @@ const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
     return (
         <div>
-            <h2 className="text-2xl font-bold text-center mb-6">{isLoginView ? 'Iniciar Sesión' : 'Crear Cuenta'}</h2>
+            <h2 className="text-2xl font-bold text-center mb-6 dark:text-[#E6E1E5]">{isLoginView ? 'Iniciar Sesión' : 'Crear Cuenta'}</h2>
             {error && <p className="bg-red-100 text-red-700 p-3 rounded-lg mb-4 text-sm">{error}</p>}
             {isLoginView ? (
                 <form onSubmit={handleLogin}>
@@ -786,9 +789,9 @@ const AuthModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                     <Button variant="primary" className="w-full mt-4" type="submit">Registrarse</Button>
                 </form>
             )}
-            <p className="text-center mt-4 text-sm">
+            <p className="text-center mt-4 text-sm dark:text-[#E6E1E5]">
                 {isLoginView ? '¿No tienes cuenta?' : '¿Ya tienes cuenta?'}
-                <button onClick={() => setIsLoginView(!isLoginView)} className="font-medium text-[#6750A4] hover:underline ml-1">
+                <button onClick={() => setIsLoginView(!isLoginView)} className="font-medium text-[#6750A4] hover:underline ml-1 dark:text-[#D0BCFF]">
                     {isLoginView ? 'Regístrate' : 'Inicia Sesión'}
                 </button>
             </p>
@@ -802,6 +805,14 @@ const App: React.FC = () => {
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+    useEffect(() => {
+        if (state.isDarkMode) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    }, [state.isDarkMode]);
     
     const renderView = useCallback(() => {
         switch(state.currentView) {
@@ -827,7 +838,7 @@ const App: React.FC = () => {
             
             <div className="flex flex-col flex-1">
                  <Header onCartClick={() => setIsCartOpen(true)} onMenuClick={() => setIsSidebarOpen(true)}/>
-                <main className="bg-[#F7F2FA] flex-grow">
+                <main className="bg-[#F7F2FA] dark:bg-[#1C1B1F] flex-grow">
                     {renderView()}
                 </main>
             </div>

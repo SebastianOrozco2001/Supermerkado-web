@@ -10,9 +10,9 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 export const Button: React.FC<ButtonProps> = ({ variant = 'secondary', children, className, ...props }) => {
     const baseClasses = "inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full font-medium transition-all duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
     const variantClasses = {
-        primary: 'bg-[#6750A4] text-white border border-transparent hover:bg-[#58448a] focus:ring-[#6750A4]',
-        secondary: 'bg-transparent text-[#6750A4] border border-[#79747E] hover:bg-[#EADDFF]',
-        danger: 'bg-[#B3261E] text-white border border-transparent hover:bg-[#9e221b] focus:ring-[#B3261E]',
+        primary: 'bg-[#6750A4] text-white border border-transparent hover:bg-[#58448a] focus:ring-[#6750A4] dark:hover:bg-[#7e6ab5]',
+        secondary: 'bg-transparent text-[#6750A4] border border-[#79747E] hover:bg-[#EADDFF] dark:text-[#D0BCFF] dark:hover:bg-[#4A4458] dark:border-[#938F99]',
+        danger: 'bg-[#B3261E] text-white border border-transparent hover:bg-[#9e221b] focus:ring-[#B3261E] dark:hover:bg-[#c93f37]',
     };
     return (
         <button className={`${baseClasses} ${variantClasses[variant]} ${className}`} {...props}>
@@ -21,8 +21,8 @@ export const Button: React.FC<ButtonProps> = ({ variant = 'secondary', children,
     );
 };
 
-const formElementClasses = "w-full px-4 py-3 rounded-lg border border-[#79747E] bg-[#FFFBFE] focus:outline-none focus:ring-2 focus:ring-[#6750A4] focus:border-transparent";
-const labelClasses = "block text-sm font-medium mb-2 text-[#49454F]";
+const formElementClasses = "w-full px-4 py-3 rounded-lg border border-[#79747E] bg-[#FFFBFE] focus:outline-none focus:ring-2 focus:ring-[#6750A4] focus:border-transparent dark:bg-[#211F26] dark:text-white dark:border-[#49454F] dark:focus:ring-[#D0BCFF]";
+const labelClasses = "block text-sm font-medium mb-2 text-[#1C1B1F] dark:text-[#E6E1E5]";
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     label: string;
@@ -82,15 +82,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         dispatch({ type: 'SET_VIEW', payload: View.PRODUCT_DETAIL });
     }
 
-    const stockStatus = product.stock === 0 ? { text: 'Agotado', class: 'text-[#B3261E]' }
-        : product.stock < 10 ? { text: `Solo ${product.stock} disponibles`, class: 'text-[#F57C00]' }
-        : { text: 'En stock', class: 'text-green-600' };
+    const stockStatus = product.stock === 0 ? { text: 'Agotado', class: 'text-[#B3261E] dark:text-[#FFB4AB]' }
+        : product.stock < 10 ? { text: `Solo ${product.stock} disponibles`, class: 'text-[#F57C00] dark:text-yellow-400' }
+        : { text: 'En stock', class: 'text-green-600 dark:text-green-400' };
 
     return (
-        <div onClick={handleCardClick} className="bg-[#FFFBFE] rounded-2xl shadow-md overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-2 hover:shadow-xl cursor-pointer">
+        <div onClick={handleCardClick} className="bg-[#FFFBFE] dark:bg-[#211F26] rounded-2xl shadow-md overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-2 hover:shadow-xl dark:shadow-none dark:hover:bg-[#36343B] cursor-pointer">
             <div className="relative">
                 <img className="w-full h-56 object-cover" src={product.image} alt={product.name} />
-                <button onClick={handleToggleWishlist} className={`absolute top-3 right-3 p-2 rounded-full bg-white/70 backdrop-blur-sm transition-colors ${isInWishlist ? 'text-[#B3261E]' : 'text-[#49454F]'} hover:text-[#B3261E]`}>
+                <button onClick={handleToggleWishlist} className={`absolute top-3 right-3 p-2 rounded-full bg-white/70 backdrop-blur-sm transition-colors ${isInWishlist ? 'text-[#B3261E]' : 'text-[#49454F]'} hover:text-[#B3261E] dark:bg-black/50 dark:text-gray-300 dark:hover:text-[#FFB4AB]`}>
                     <span className="material-symbols-outlined">{isInWishlist ? 'favorite' : 'favorite_border'}</span>
                 </button>
                 {product.originalPrice && (
@@ -100,17 +100,17 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 )}
             </div>
             <div className="p-4 flex-grow flex flex-col">
-                <p className="text-xs text-[#625B71] uppercase">{product.category}</p>
-                <h3 className="text-lg font-medium text-[#1C1B1F] truncate">{product.name}</h3>
+                <p className="text-xs text-[#49454F] dark:text-[#CAC4D0] uppercase">{product.category}</p>
+                <h3 className="text-lg font-medium text-[#1C1B1F] dark:text-[#E6E1E5] truncate">{product.name}</h3>
                 <div className="flex items-center gap-1 my-1">
                     <span className="material-symbols-outlined text-yellow-500 text-base">star</span>
-                    <span className="text-sm text-[#49454F]">{product.rating.toFixed(1)}</span>
-                    <span className="text-xs text-[#79747E]">({product.reviewCount})</span>
+                    <span className="text-sm text-[#1C1B1F] dark:text-[#E6E1E5]">{product.rating.toFixed(1)}</span>
+                    <span className="text-xs text-[#49454F] dark:text-[#CAC4D0]">({product.reviewCount})</span>
                 </div>
                 <div className="flex items-baseline gap-2">
-                    <p className="text-xl font-bold text-[#6750A4]">${product.price.toFixed(2)}</p>
+                    <p className="text-xl font-bold text-[#6750A4] dark:text-[#D0BCFF]">${product.price.toFixed(2)}</p>
                     {product.originalPrice && (
-                        <p className="text-sm text-[#79747E] line-through">${product.originalPrice.toFixed(2)}</p>
+                        <p className="text-sm text-[#49454F] dark:text-[#CAC4D0] line-through">${product.originalPrice.toFixed(2)}</p>
                     )}
                 </div>
                 <p className={`text-sm font-medium my-2 ${stockStatus.class}`}>{stockStatus.text}</p>
@@ -136,8 +136,8 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
 
     return (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center animate-fade-in-fast" onClick={onClose}>
-            <div className="bg-[#FFFBFE] rounded-3xl shadow-lg p-6 w-full max-w-md m-4 relative animate-scale-in-fast" onClick={e => e.stopPropagation()}>
-                <button onClick={onClose} className="absolute top-4 right-4 text-[#49454F] hover:text-[#1C1B1F]">
+            <div className="bg-[#FFFBFE] dark:bg-[#2C2B30] rounded-3xl shadow-lg p-6 w-full max-w-md m-4 relative animate-scale-in-fast" onClick={e => e.stopPropagation()}>
+                <button onClick={onClose} className="absolute top-4 right-4 text-[#1C1B1F] dark:text-gray-300 hover:text-gray-700 dark:hover:text-white">
                     <span className="material-symbols-outlined">close</span>
                 </button>
                 {children}
@@ -166,9 +166,9 @@ export const Toast: React.FC<{ message: string; type: 'success' | 'error' | 'war
     }, [onClose]);
 
     return (
-        <div className={`fixed bottom-5 right-5 bg-[#FFFBFE] rounded-xl shadow-2xl p-4 flex items-center gap-4 border-l-4 ${colors[type]} z-[1100] animate-slide-in-right`}>
+        <div className={`fixed bottom-5 right-5 bg-[#FFFBFE] dark:bg-[#2C2B30] rounded-xl shadow-2xl p-4 flex items-center gap-4 border-l-4 ${colors[type]} z-[1100] animate-slide-in-right`}>
             <span className="material-symbols-outlined text-2xl">{icons[type]}</span>
-            <span className="text-[#1C1B1F]">{message}</span>
+            <span className="text-[#1C1B1F] dark:text-gray-200">{message}</span>
         </div>
     );
 };
